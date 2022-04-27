@@ -18,6 +18,14 @@ areas may be combined.
 Depending on the table, different rules are used (sum, mean, etc).
 This functionality is not complete and the user should proceed with caution.
 
+Use
+------------
+
+Install the package with `pip install oxcovid19`.
+
+The github repository https://github.com/johnharveymath/oxcovid19db includes
+an example script at `bin/example.py` which demonstrates the use of the package.
+
 Contributors
 ------------
 
