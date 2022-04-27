@@ -166,7 +166,7 @@ def validate_input(df):
     """ An input df must have one column of names and one column of gids """
     if not geo_columns(df):
         return False
-    if 'gid' not in df.colummns:
+    if 'gid' not in df.columns:
         return False
     return True
 

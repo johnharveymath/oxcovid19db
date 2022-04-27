@@ -14,10 +14,15 @@
    limitations under the License.
 '''
 
+# if you are working in a clone of the repository use this line:
 from src import oxcovid19db as ox
+# if you have installed the package from pypi use this line:
+# import oxcovid19db as ox
 
-# Open a connection to the database. Pass queries through execute. Connection will re-open if it times out
+# Open a connection to the database.
 db_conn = ox.Connect()
+
+# Pass queries through execute to obtain data. Connection will re-open if it times out
 df_epi = db_conn.execute("SELECT source, date, adm_area_2, confirmed, gid FROM epidemiology WHERE source='GBR_PHE' AND "
                          "adm_area_1='England' AND adm_area_2 IS NOT NULL AND adm_area_3 IS NULL")
 df_mob = db_conn.execute(
