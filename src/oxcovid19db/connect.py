@@ -40,15 +40,19 @@ class Connect:
 
         self.conn = None
         self.cur = None
+
+        # Open the connection on initialisation
         self.open_connection()
         self.cursor()
 
     def reset_connection(self):
+        """ if execute method fails due to a connection issue, this method is called to reset the connection """
         self.close_connection()
         self.open_connection()
         self.cursor()
 
     def open_connection(self, attempt: int = MAX_ATTEMPT_FAIL):
+        """ Opens the connection and assigns it to self.conn """
         if not self.conn:
             try:
                 self.conn = psycopg2.connect(user=self.user, password=self.password, host=self.host,
@@ -64,13 +68,31 @@ class Connect:
                 raise error
 
     def cursor(self):
+        """ Create a cursor and assign it to self.cur """
         if not self.cur or self.cur.closed:
             if not self.conn:
                 self.open_connection()
             self.cur = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
             return self.cur
 
-    def execute(self, query: str, data: str = None, attempt: int = MAX_ATTEMPT_FAIL, return_pandas: bool = True):
+    def execute(self, query: str, data=None, attempt: int = MAX_ATTEMPT_FAIL, return_pandas: bool = True):
+        """
+        Uses self.cur to execute a query
+        data is inserted into the query as with the psycopg2 method Cursor.execute(query, data)
+        Documentation is here: https://www.psycopg.org/docs/cursor.html#cursor.execute
+        attempt: a non-negative integer which is the number of times the query will be re-attempted
+        return_pandas: if True, returns DataFrame, if False, returns the results of the query
+        The returned DataFrame provides the gid as a tuple, not a list, for hashability
+        """
+
+        # check attempt is a positive integer
+        try:
+            attempt = int(attempt)
+            if attempt < 0:
+                raise ValueError('Variable attempt must be a non-negative integer')
+        except ValueError:
+            raise ValueError('Variable attempt must be a non-negative integer')
+
         try:
             self.cur.execute(query, data)
             self.conn.commit()

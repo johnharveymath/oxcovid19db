@@ -18,7 +18,14 @@ from .connect import Connect
 
 
 class ColumnLists:
+    """
+    The class variable __cache_state is a dict holding the list of columns for each table
+    Initialising an object with a table_list will use this variable to assign attributes to the object
+    Then any extra tables will be collected from the database
+    Then the cache is updated
+    """
     __cache_state = {}
+
     def __init__(self, table_list):
         # Assign any column lists already collected
         self.__dict__ = ColumnLists.__cache_state
